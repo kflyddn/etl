@@ -13,18 +13,6 @@ public class KafkaTopicConfig {
     public static final String ERROR_TOPIC = "error_topic";
     public static final String JSON_TOPIC = "json_topic";
 
-    //@Value(value = "${kafka.bootstrapAddress}")
-    private String bootstrapAddress = "127.0.0.1";
-
-
-    //When using Spring Boot, a KafkaAdmin bean is automatically registered so you only need the NewTopic @Bean
-/*    @Bean
-    public KafkaAdmin kafkaAdmin() {
-        Map<String, Object> configs = new HashMap<>();
-        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
-        return new KafkaAdmin(configs);
-    }*/
-
     @Bean
     public NewTopic xmlTopic() {
         return new NewTopic(XML_TOPIC, 1, (short) 1);

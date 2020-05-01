@@ -17,9 +17,11 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfig {
 
-    //@Value(value = "${kafka.bootstrapAddress}")
-    private String bootstrapAddress = "127.0.0.1:9092";
-    private String groupId = "traiana.group";
+    @Value(value = "${kafka.bootstrapAddress}")
+    private String bootstrapAddress;
+
+    @Value(value = "${kafka.groupId}")
+    private String groupId;
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
