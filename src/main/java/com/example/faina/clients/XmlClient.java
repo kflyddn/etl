@@ -1,4 +1,4 @@
-package com.example.faina;
+package com.example.faina.clients;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
