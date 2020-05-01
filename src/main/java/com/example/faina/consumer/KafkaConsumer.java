@@ -9,17 +9,12 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-
 import static com.example.faina.config.KafkaTopicConfig.CSV_TOPIC;
 import static com.example.faina.config.KafkaTopicConfig.JSON_TOPIC;
+import static com.example.faina.utils.CsvUtils.csvToJson;
 
 @Service
 public class KafkaConsumer {
-
-    //TODO: move to utils
-    private CsvSchema csv = CsvSchema.emptySchema().withHeader();
-    private CsvMapper csvMapper = new CsvMapper();
 
     @Autowired
     private KafkaTemplate kafkaTemplate;
@@ -36,13 +31,9 @@ public class KafkaConsumer {
     public void listenCsv(ConsumerRecord<?, ?> cr) throws Exception {
         //TODO: log4j
        // System.out.println("Received message: " + cr.value());
-        //TODO: transform from csv to json
         try {
-            //TODO: move to utils
-            MappingIterator<Map<?, ?>> mappingIterator =  csvMapper.reader().forType(Map.class).with(csv).readValues(cr.value().toString());
-            //TODO: remove surrounding []
-            String jsonMessage = mappingIterator.readAll().toString();
-       //     System.out.println("JSON: "+jsonMessage);
+            String jsonMessage = csvToJson(cr.value().toString());
+            //TODO: add onSuccess/onFailure
             kafkaTemplate.send(JSON_TOPIC, jsonMessage);
         } catch(Exception e) {
             e.printStackTrace();

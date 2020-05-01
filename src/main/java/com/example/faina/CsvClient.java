@@ -49,7 +49,6 @@ public class CsvClient implements CommandLineRunner {
 			} while (line != null);
 		}
 
-		logger.info("All sent!!!");
 		Thread.sleep(200);
 	}
 
@@ -62,13 +61,11 @@ public class CsvClient implements CommandLineRunner {
 
 			@Override
 			public void onSuccess(SendResult<String, String> result) {
-				//TODO: log4j
 				logger.info("Sent message=[" + message +
 						"] with offset=[" + result.getRecordMetadata().offset() + "]");
 			}
 			@Override
 			public void onFailure(Throwable ex) {
-				//TODO: log4j
 				logger.error("Unable to send message=["
 						+ message + "] due to : " + ex.getMessage());
 				//TODO: fix error message format, extract formatting method to utils
