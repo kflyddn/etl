@@ -13,4 +13,13 @@ public class InputUtils {
         );
         return new BufferedReader(new FileReader(file));
     }
+
+    public static String getFileName(String[] args, String defaultFileName) {
+        String fileName = defaultFileName;
+        //override the file name with program argument
+        if (args != null && args.length > 0 && args[0] != null)	{
+            fileName = args[0];
+        }
+        return fileName;
+    }
 }

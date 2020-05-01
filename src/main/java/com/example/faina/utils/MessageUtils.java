@@ -19,15 +19,18 @@ public class MessageUtils {
 
             @Override
             public void onSuccess(SendResult<String, String> result) {
-                logger.info("Sent message=[" + message +
-                        "] with offset=[" + result.getRecordMetadata().offset() + "]");
+                String infoMessage = "Sent message=[" + message +
+                        "] with offset=[" + result.getRecordMetadata().offset() + "]";
+                logger.info(infoMessage);
+                //TODO: persist infoMessage to ES
             }
             @Override
             public void onFailure(Throwable ex) {
-                logger.error("Unable to send message=["
-                        + message + "] due to : " + ex.getMessage());
-                //TODO: fix error message format, extract formatting method to utils
-                template.send(ERROR_TOPIC, message);
+                String errMessage = "Unable to send message=["
+                        + message + "] due to : " + ex.getMessage();
+                logger.error(errMessage);
+                //TODO: persist errMessage to ES
+                template.send(ERROR_TOPIC, errMessage);
             }
         });
     }

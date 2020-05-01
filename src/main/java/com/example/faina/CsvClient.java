@@ -11,6 +11,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import java.io.BufferedReader;
 
 import static com.example.faina.config.KafkaTopicConfig.*;
+import static com.example.faina.utils.InputUtils.getFileName;
 import static com.example.faina.utils.InputUtils.getReader;
 import static com.example.faina.utils.MessageUtils.sendMessage;
 
@@ -30,7 +31,7 @@ public class CsvClient implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		String fileName = getFileName(args);
+		String fileName = getFileName(args, "input.csv");
 
 		String header = null;
 		try (BufferedReader reader = getReader(CsvClient.class, fileName)) {
@@ -49,16 +50,6 @@ public class CsvClient implements CommandLineRunner {
 		}
 
 		Thread.sleep(20000);
-	}
-
-
-	private String getFileName(String[] args) {
-		String fileName = "input.csv";
-		//override the file name with program argument
-		if (args != null && args.length > 0 && args[0] != null)	{
-			fileName = args[0];
-		}
-		return fileName;
 	}
 
 }

@@ -39,6 +39,7 @@ public class KafkaConsumer {
     @KafkaListener(topics = JSON_TOPIC)
     public void listenJson(ConsumerRecord<?, ?> cr) {
         logger.info("Received json message:\n"+cr.value());
+        //TODO: send json via REST
     }
 
     @KafkaListener(topics = ERROR_TOPIC)

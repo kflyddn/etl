@@ -1,4 +1,4 @@
-package com.example.faina.traiana;
+package com.example.faina;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
