@@ -22,6 +22,7 @@ public class CsvClient implements CommandLineRunner {
 	public static Logger logger = LoggerFactory.getLogger(CsvClient.class);
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(CsvClient.class, args).close();
 	}
 
@@ -38,27 +39,17 @@ public class CsvClient implements CommandLineRunner {
 			String line;
 			do {
 				line = reader.readLine();
-
 				if (line != null) {
 					if (header == null)	{
 						header = line;
 						continue;
 					}
 					sendMessage(CSV_TOPIC, header+'\n'+line);
-					/*Future<RecordMetadata> res =
-							kafkaProducer.send(new ProducerRecord
-									(KafkaProcessor.TEST_CONNECTION_TOPIC,
-											counter % MainConsumer.NUM_OF_THREADS,
-											line,
-											line)
-							);*/
 				}
 			} while (line != null);
 		}
 
-		//latch.await(60, TimeUnit.SECONDS);
-		//logger.info("All sent!!!");
-		System.out.println("All sent!!!");
+		logger.info("All sent!!!");
 		Thread.sleep(200);
 	}
 
@@ -72,14 +63,13 @@ public class CsvClient implements CommandLineRunner {
 			@Override
 			public void onSuccess(SendResult<String, String> result) {
 				//TODO: log4j
-				System.out.println("Sent message=[" + message +
+				logger.info("Sent message=[" + message +
 						"] with offset=[" + result.getRecordMetadata().offset() + "]");
-				//         kafkaTemplate.send(ERROR_TOPIC, msg);
 			}
 			@Override
 			public void onFailure(Throwable ex) {
 				//TODO: log4j
-				System.out.println("Unable to send message=["
+				logger.error("Unable to send message=["
 						+ message + "] due to : " + ex.getMessage());
 				//TODO: fix error message format, extract formatting method to utils
 				template.send(ERROR_TOPIC, message);
