@@ -7,10 +7,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.io.BufferedReader;
 
-import static com.example.faina.config.KafkaTopicConfig.CSV_TOPIC;
+import static com.example.faina.config.KafkaTopicConfig.*;
 import static com.example.faina.utils.InputUtils.getReader;
 
 @SpringBootApplication
@@ -28,9 +31,10 @@ public class CsvClient implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		//TODO: expose option to override the file name with program argument
+		String fileName = getFileName(args);
+
 		String header = null;
-		try (BufferedReader reader = getReader(CsvClient.class, "input.csv")) {
+		try (BufferedReader reader = getReader(CsvClient.class, fileName)) {
 			String line;
 			do {
 				line = reader.readLine();
@@ -40,7 +44,7 @@ public class CsvClient implements CommandLineRunner {
 						header = line;
 						continue;
 					}
-					this.template.send(CSV_TOPIC, header+'\n'+line);
+					sendMessage(CSV_TOPIC, header+'\n'+line);
 					/*Future<RecordMetadata> res =
 							kafkaProducer.send(new ProducerRecord
 									(KafkaProcessor.TEST_CONNECTION_TOPIC,
@@ -56,6 +60,40 @@ public class CsvClient implements CommandLineRunner {
 		//logger.info("All sent!!!");
 		System.out.println("All sent!!!");
 		Thread.sleep(200);
+	}
+
+	public void sendMessage(String topic, String message) {
+
+		ListenableFuture<SendResult<String, String>> future =
+				this.template.send(topic, message);
+
+		future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+
+			@Override
+			public void onSuccess(SendResult<String, String> result) {
+				//TODO: log4j
+				System.out.println("Sent message=[" + message +
+						"] with offset=[" + result.getRecordMetadata().offset() + "]");
+				//         kafkaTemplate.send(ERROR_TOPIC, msg);
+			}
+			@Override
+			public void onFailure(Throwable ex) {
+				//TODO: log4j
+				System.out.println("Unable to send message=["
+						+ message + "] due to : " + ex.getMessage());
+				//TODO: fix error message format, extract formatting method to utils
+				template.send(ERROR_TOPIC, message);
+			}
+		});
+	}
+
+	private String getFileName(String[] args) {
+		String fileName = "input.csv";
+		//override the file name with program argument
+		if (args != null && args.length > 0 && args[0] != null)	{
+			fileName = args[0];
+		}
+		return fileName;
 	}
 
 }
