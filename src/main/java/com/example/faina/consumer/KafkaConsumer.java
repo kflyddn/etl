@@ -1,5 +1,6 @@
 package com.example.faina.consumer;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -21,11 +22,11 @@ public class KafkaConsumer {
         // kafkaTemplate.send(jsonMessage);
     }*/
 
-  /*  @KafkaListener(topics = CSV_TOPIC*//*, groupId = "foo"*//*)
-    public void listenCsv(String message) {
+    @KafkaListener(topics = CSV_TOPIC, groupId = "traiana.group")
+    public void listenCsv(ConsumerRecord<?, ?> cr) throws Exception {
         //TODO: log4j
-        System.out.println("Received message: " + message);
+        System.out.println("Received message: " + cr.value());
         //TODO: transform from csv to json
-       // kafkaTemplate.send(jsonMessage);
-    }*/
+        // kafkaTemplate.send(jsonMessage);
+    }
 }
