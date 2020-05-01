@@ -7,14 +7,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.io.BufferedReader;
 
 import static com.example.faina.config.KafkaTopicConfig.*;
 import static com.example.faina.utils.InputUtils.getReader;
+import static com.example.faina.utils.MessageUtils.sendMessage;
 
 @SpringBootApplication
 public class CsvClient implements CommandLineRunner {
@@ -27,7 +25,7 @@ public class CsvClient implements CommandLineRunner {
 	}
 
 	@Autowired
-	private KafkaTemplate<String, String> template;
+	private KafkaTemplate<String, String> kafkaTemplate;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -44,35 +42,15 @@ public class CsvClient implements CommandLineRunner {
 						header = line;
 						continue;
 					}
-					sendMessage(CSV_TOPIC, header+'\n'+line);
+					String message = header+'\n'+line;
+					sendMessage(CSV_TOPIC, message, this.kafkaTemplate, logger);
 				}
 			} while (line != null);
 		}
 
-		Thread.sleep(200);
+		Thread.sleep(20000);
 	}
 
-	public void sendMessage(String topic, String message) {
-
-		ListenableFuture<SendResult<String, String>> future =
-				this.template.send(topic, message);
-
-		future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
-
-			@Override
-			public void onSuccess(SendResult<String, String> result) {
-				logger.info("Sent message=[" + message +
-						"] with offset=[" + result.getRecordMetadata().offset() + "]");
-			}
-			@Override
-			public void onFailure(Throwable ex) {
-				logger.error("Unable to send message=["
-						+ message + "] due to : " + ex.getMessage());
-				//TODO: fix error message format, extract formatting method to utils
-				template.send(ERROR_TOPIC, message);
-			}
-		});
-	}
 
 	private String getFileName(String[] args) {
 		String fileName = "input.csv";
