@@ -19,7 +19,7 @@ import static com.example.faina.utils.InputUtils.getReader;
 @SpringBootApplication
 public class CsvClient implements CommandLineRunner {
 
-	public static Logger logger = LoggerFactory.getLogger(CsvClient.class);
+	private static Logger logger = LoggerFactory.getLogger(CsvClient.class);
 
 	public static void main(String[] args) {
 

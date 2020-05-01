@@ -1,9 +1,8 @@
 package com.example.faina.consumer;
 
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -16,21 +15,19 @@ import static com.example.faina.utils.CsvUtils.csvToJson;
 @Service
 public class KafkaConsumer {
 
+    private static Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
+
     @Autowired
     private KafkaTemplate kafkaTemplate;
 
    /* @KafkaListener(topics = XML_TOPIC*//*, groupId = "foo"*//*)
     public void listenXml(String message) {
-        //TODO: log4j
-        System.out.println("Received message: " + message);
-        //TODO: transform from xml to json
-        // kafkaTemplate.send(jsonMessage);
+       //TODO
     }*/
 
     @KafkaListener(topics = CSV_TOPIC, groupId = "traiana.group")
     public void listenCsv(ConsumerRecord<?, ?> cr) throws Exception {
-        //TODO: log4j
-       // System.out.println("Received message: " + cr.value());
+       logger.info("Received message: " + cr.value());
         try {
             String jsonMessage = csvToJson(cr.value().toString());
             //TODO: add onSuccess/onFailure
