@@ -1,8 +1,5 @@
 package com.example.faina.consumer;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +11,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 import static com.example.faina.config.KafkaTopicConfig.*;
-import static com.example.faina.utils.CsvUtils.csvToJson;
+import static com.example.faina.utils.TransformUtils.csvToJson;
+import static com.example.faina.utils.TransformUtils.xmlToJson;
 import static com.example.faina.utils.MessageUtils.sendMessage;
 
 @Service
@@ -29,12 +27,9 @@ public class KafkaConsumer {
     @KafkaListener(topics = XML_TOPIC)
     public void listenXml(ConsumerRecord<?, ?> cr)  {
         logger.info(String.format(logMessage, "xml", cr.value()));
-        XmlMapper xmlMapper = new XmlMapper();
-        JsonNode node = null;
+
         try {
-            node = xmlMapper.readTree(cr.value().toString().getBytes());
-            ObjectMapper jsonMapper = new ObjectMapper();
-            String json = jsonMapper.writeValueAsString(node);
+            String json = xmlToJson(cr);
             sendMessage(JSON_TOPIC, json, kafkaTemplate, logger);
         } catch (IOException e) {
             String errMessage = "this message is not valid xml: \n"+cr;
