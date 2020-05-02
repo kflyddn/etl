@@ -1,6 +1,6 @@
 
 
-This is a simple ETL using Java, Spring Boot and Kafka.
+This is a publisher-subscriber pattern implementation using Java, Spring Boot and Kafka.
 The application reads .csv/.xml files and transforms them into .json
 
 **How to execute:**
