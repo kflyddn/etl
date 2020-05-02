@@ -35,6 +35,8 @@ import static org.junit.Assert.assertTrue;
 })
 public class IntegrationTest {
 
+    private static final long WAIT  = 2000L;
+
     private static Logger logger = LoggerFactory.getLogger(IntegrationTest.class);
 
     private static final String [] topicsToSubscribe = {ERROR_TOPIC, JSON_TOPIC};
@@ -62,10 +64,11 @@ public class IntegrationTest {
 
 
     @Test
-    public void csvFlowTest() throws InterruptedException {
+    public void csvToJsonTest() throws InterruptedException {
 
         String csvMessage = "id,header1, header2\n1,val1,val2";
         sendMessage(CSV_TOPIC, csvMessage, kafkaTemplate, logger);
+        Thread.sleep(WAIT);
         ConsumerRecord<String, String> received = consumerRecords.poll(10, TimeUnit.SECONDS);
         assertTrue(received != null);
         String expected = "[{id=1, header1=val1, header2=val2}]";
@@ -77,6 +80,34 @@ public class IntegrationTest {
     public void csvNotValidTest() throws InterruptedException {
         String csvInvalid = "\"";
         sendMessage(CSV_TOPIC, csvInvalid, kafkaTemplate, logger);
+        Thread.sleep(WAIT);
+        ConsumerRecord<String, String> received = consumerRecords.poll(10, TimeUnit.SECONDS);
+        assertTrue(received != null);
+        //assert that consumerRecords contains error message
+        assertTrue(received.topic().equals(ERROR_TOPIC));
+    }
+
+    @Test
+    public void xmlToJsonTest() throws InterruptedException {
+
+        String xmlMessage = "<message id=\"1\">\n" +
+                "<field1>val1</field1>\n" +
+                "<field2>val2</field2>\n" +
+                "</message>";
+        sendMessage(XML_TOPIC, xmlMessage, kafkaTemplate, logger);
+        Thread.sleep(WAIT);
+        ConsumerRecord<String, String> received = consumerRecords.poll(10, TimeUnit.SECONDS);
+        assertTrue(received != null);
+        String expected = "{\"id\":\"1\",\"field1\":\"val1\",\"field2\":\"val2\"}";
+        assertTrue(received.topic().equals(JSON_TOPIC));
+        assertTrue(received.value().equals(expected));
+    }
+
+    @Test
+    public void xmlNotValidTest() throws InterruptedException {
+        String xmlInvalid = "<message id=";
+        sendMessage(XML_TOPIC, xmlInvalid, kafkaTemplate, logger);
+        Thread.sleep(WAIT);
         ConsumerRecord<String, String> received = consumerRecords.poll(10, TimeUnit.SECONDS);
         assertTrue(received != null);
         //assert that consumerRecords contains error message
