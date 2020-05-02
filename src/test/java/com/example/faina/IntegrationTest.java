@@ -71,7 +71,7 @@ public class IntegrationTest {
         Thread.sleep(WAIT);
         ConsumerRecord<String, String> received = consumerRecords.poll(10, TimeUnit.SECONDS);
         assertTrue(received != null);
-        String expected = "[{id=1, header1=val1, header2=val2}]";
+        String expected = "{\"header2\":\"val2\",\"id\":\"1\",\"header1\":\"val1\"}";
         assertTrue(received.topic().equals(JSON_TOPIC));
         assertTrue(received.value().equals(expected));
     }

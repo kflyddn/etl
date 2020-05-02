@@ -11,9 +11,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 import static com.example.faina.config.KafkaTopicConfig.*;
-import static com.example.faina.utils.TransformUtils.csvToJson;
-import static com.example.faina.utils.TransformUtils.xmlToJson;
 import static com.example.faina.utils.MessageUtils.sendMessage;
+import static com.example.faina.utils.TransformUtils.*;
 
 @Service
 public class TraianaKafkaConsumer {
@@ -33,7 +32,7 @@ public class TraianaKafkaConsumer {
         logger.info(String.format(logMessage, "xml", cr.value()));
 
         try {
-            String json = xmlToJson(cr);
+            String json = xmlToJsonString(cr);
             sendMessage(JSON_TOPIC, json, kafkaTemplate, logger);
         } catch (IOException e) {
             String errMessage = "this message is not valid xml: \n"+cr;
@@ -46,7 +45,7 @@ public class TraianaKafkaConsumer {
     public void listenCsv(ConsumerRecord<?, ?> cr) throws Exception {
        logger.info(String.format(logMessage, "csv", cr.value()));
         try {
-            String jsonMessage = csvToJson(cr.value().toString());
+            String jsonMessage = csvToJson(cr.value().toString()).toString();
             sendMessage(JSON_TOPIC, jsonMessage, kafkaTemplate, logger);
         } catch(Exception e) {
             String errMessage = "this message is not valid csv: \n"+cr;
