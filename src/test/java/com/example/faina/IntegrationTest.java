@@ -4,8 +4,8 @@ import com.example.faina.config.KafkaTopicConfig;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.ClassRule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -52,7 +52,7 @@ public class IntegrationTest {
 
     private BlockingQueue<ConsumerRecord<String, String>> consumerRecords;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         consumerRecords = new LinkedBlockingQueue<>();
 
