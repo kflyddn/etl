@@ -19,14 +19,14 @@ public class MessageUtils {
 
             @Override
             public void onSuccess(SendResult<String, String> result) {
-                String infoMessage = "Sent message=[" + message +
+                String infoMessage = "Sent message to "+topic+"=[" + message +
                         "] with offset=[" + result.getRecordMetadata().offset() + "]";
                 logger.info(infoMessage);
                 //TODO: persist infoMessage to ES
             }
             @Override
             public void onFailure(Throwable ex) {
-                String errMessage = "Unable to send message=["
+                String errMessage = "Unable to send message to "+topic+"=["
                         + message + "] due to : " + ex.getMessage();
                 logger.error(errMessage);
                 //TODO: persist errMessage to ES
