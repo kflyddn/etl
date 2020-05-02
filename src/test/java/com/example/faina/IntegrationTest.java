@@ -1,6 +1,7 @@
 package com.example.faina;
 
 import com.example.faina.config.TestConfig;
+import com.example.faina.consumer.TraianaKafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.After;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +26,7 @@ import static com.example.faina.utils.MessageUtils.sendMessage;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {TestConfig.class})
+@SpringBootTest(classes = {TestConfig.class, TraianaKafkaConsumer.class})
 @DirtiesContext
 public class IntegrationTest {
 
@@ -61,9 +62,9 @@ public class IntegrationTest {
 
         assertTrue(consumerRecords.isEmpty());
         String csvMessage = "id,header1, header2\n1,val1,val2";
-
+      //  Thread.sleep(10000);
         sendMessage(CSV_TOPIC, csvMessage, kafkaTemplate, logger);
-        Thread.sleep(10000);
+      //  Thread.sleep(10000);
         ConsumerRecord<String, String> received = consumerRecords.poll(10, TimeUnit.SECONDS);
         assertTrue(received != null);
         //TODO: fix expected value

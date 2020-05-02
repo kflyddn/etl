@@ -25,7 +25,8 @@ import static com.example.faina.config.KafkaTopicConfig.*;
 @Configuration
 public class TestConfig {
 
-    private static final String [] topics  = {XML_TOPIC, CSV_TOPIC, ERROR_TOPIC, JSON_TOPIC};
+    private static final String [] topicsToSubscribe = {ERROR_TOPIC, JSON_TOPIC};
+    private static final String [] topics = {XML_TOPIC, CSV_TOPIC, ERROR_TOPIC, JSON_TOPIC};
 
     @Value(value = "${kafka.bootstrapAddress}")
     private String bootstrapAddress;
@@ -54,7 +55,7 @@ public class TestConfig {
     @Bean
     public KafkaMessageListenerContainer<String, String> embeddedContainer(@Autowired EmbeddedKafkaBroker kafkaBroker,
                                                                            @Autowired BlockingQueue<ConsumerRecord<String, String>> consumerRecords)    {
-        ContainerProperties containerProperties = new ContainerProperties(topics);
+        ContainerProperties containerProperties = new ContainerProperties(topicsToSubscribe);
 
         Map<String, Object> props = KafkaTestUtils.consumerProps(
                 groupId, "false", kafkaBroker);

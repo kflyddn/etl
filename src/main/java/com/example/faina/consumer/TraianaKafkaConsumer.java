@@ -16,10 +16,14 @@ import static com.example.faina.utils.TransformUtils.xmlToJson;
 import static com.example.faina.utils.MessageUtils.sendMessage;
 
 @Service
-public class KafkaConsumer {
+public class TraianaKafkaConsumer {
 
-    private static Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
+    private static Logger logger = LoggerFactory.getLogger(TraianaKafkaConsumer.class);
     private static final String logMessage = "%s listener received a message:\n%s";
+
+    public TraianaKafkaConsumer()  {
+        logger.info("creating KafkaConsumer");
+    }
 
     @Autowired
     private KafkaTemplate kafkaTemplate;
