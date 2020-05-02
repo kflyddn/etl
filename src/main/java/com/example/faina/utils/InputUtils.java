@@ -7,6 +7,14 @@ import java.io.FileReader;
 
 public class InputUtils {
 
+
+    /**
+     * creates buffered file reader
+     * @param clasz
+     * @param fileName
+     * @return buffered file reader
+     * @throws FileNotFoundException
+     */
     public static BufferedReader getReader(Class clasz, String fileName) throws FileNotFoundException {
         File file = new File(
                 clasz.getClassLoader().getResource(fileName).getFile()
@@ -14,6 +22,13 @@ public class InputUtils {
         return new BufferedReader(new FileReader(file));
     }
 
+
+    /**
+     * finds out the input file name
+     * @param args
+     * @param defaultFileName
+     * @return input file name
+     */
     public static String getFileName(String[] args, String defaultFileName) {
         String fileName = defaultFileName;
         //override the file name with program argument

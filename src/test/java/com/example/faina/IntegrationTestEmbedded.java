@@ -64,9 +64,8 @@ public class IntegrationTestEmbedded {
 
         assertTrue(consumerRecords.isEmpty());
         String csvMessage = "id,header1, header2\n1,val1,val2";
-      //  Thread.sleep(10000);
         sendMessage(CSV_TOPIC, csvMessage, kafkaTemplate, logger);
-      //  Thread.sleep(10000);
+        Thread.sleep(10000);
         ConsumerRecord<String, String> received = consumerRecords.poll(10, TimeUnit.SECONDS);
         assertTrue(received != null);
         //TODO: fix expected value
@@ -81,6 +80,7 @@ public class IntegrationTestEmbedded {
         assertTrue(consumerRecords.isEmpty());
         String csvInvalid = "id,header1, header2\nval1,val2";
         sendMessage(CSV_TOPIC, csvInvalid, kafkaTemplate, logger);
+        Thread.sleep(10000);
         ConsumerRecord<String, String> received = consumerRecords.poll(10, TimeUnit.SECONDS);
         assertTrue(received != null);
         //assert that consumerRecords contains error message

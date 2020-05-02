@@ -10,6 +10,13 @@ import static com.example.faina.config.KafkaTopicConfig.ERROR_TOPIC;
 
 public class MessageUtils {
 
+    /**
+     * sends message to Kafka in asynchronous way
+     * @param topic
+     * @param message
+     * @param template
+     * @param logger
+     */
     public static void sendMessage(String topic, String message, KafkaTemplate<String, String> template, Logger logger) {
 
         ListenableFuture<SendResult<String, String>> future =
