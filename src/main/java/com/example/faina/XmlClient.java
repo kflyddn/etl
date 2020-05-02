@@ -1,4 +1,4 @@
-package com.example.faina.clients;
+package com.example.faina;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import static com.example.faina.config.KafkaTopicConfig.XML_TOPIC;
 import static com.example.faina.utils.InputUtils.getFileName;
 import static com.example.faina.utils.MessageUtils.sendMessage;
 
-@SpringBootApplication
+//@SpringBootApplication
 public class XmlClient implements CommandLineRunner {
 
 	private static Logger logger = LoggerFactory.getLogger(XmlClient.class);
