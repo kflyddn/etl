@@ -1,5 +1,8 @@
 package com.example.faina.consumer;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 
 import static com.example.faina.config.KafkaTopicConfig.*;
 import static com.example.faina.utils.CsvUtils.csvToJson;
@@ -21,8 +26,19 @@ public class KafkaConsumer {
     private KafkaTemplate kafkaTemplate;
 
     @KafkaListener(topics = XML_TOPIC)
-    public void listenXml(ConsumerRecord<?, ?> cr) {
-       //TODO
+    public void listenXml(ConsumerRecord<?, ?> cr)  {
+        XmlMapper xmlMapper = new XmlMapper();
+        JsonNode node = null;
+        try {
+            node = xmlMapper.readTree(cr.value().toString().getBytes());
+            ObjectMapper jsonMapper = new ObjectMapper();
+            String json = jsonMapper.writeValueAsString(node);
+            sendMessage(JSON_TOPIC, json, kafkaTemplate, logger);
+        } catch (IOException e) {
+            String errMessage = "this message is not valid xml: \n"+cr;
+            kafkaTemplate.send(ERROR_TOPIC, errMessage);
+        }
+
     }
 
     @KafkaListener(topics = CSV_TOPIC)
@@ -32,7 +48,8 @@ public class KafkaConsumer {
             String jsonMessage = csvToJson(cr.value().toString());
             sendMessage(JSON_TOPIC, jsonMessage, kafkaTemplate, logger);
         } catch(Exception e) {
-            e.printStackTrace();
+            String errMessage = "this message is not valid csv: \n"+cr;
+            kafkaTemplate.send(ERROR_TOPIC, errMessage);
         }
     }
 
@@ -44,7 +61,7 @@ public class KafkaConsumer {
 
     @KafkaListener(topics = ERROR_TOPIC)
     public void listenError(ConsumerRecord<?, ?> cr) throws Exception {
-        logger.info("Received error message:\n"+cr.value());
+        logger.error("Received error message:\n"+cr.value());
         //TODO: write to database
 
     }
