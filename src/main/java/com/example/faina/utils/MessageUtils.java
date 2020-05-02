@@ -19,15 +19,15 @@ public class MessageUtils {
 
             @Override
             public void onSuccess(SendResult<String, String> result) {
-                String infoMessage = "Sent message to "+topic+"=[" + message +
-                        "] with offset=[" + result.getRecordMetadata().offset() + "]";
+                String infoMessage = "Callback onSuccess: Sent message to "+topic+":\n" + message +
+                        "\n with offset=[" + result.getRecordMetadata().offset() + "]";
                 logger.info(infoMessage);
                 //TODO: persist infoMessage to ES
             }
             @Override
             public void onFailure(Throwable ex) {
-                String errMessage = "Unable to send message to "+topic+"=["
-                        + message + "] due to : " + ex.getMessage();
+                String errMessage = "Callback onFailure: Unable to send message to "+topic+":\n"
+                        + message + "\n due to : " + ex.getMessage();
                 logger.error(errMessage);
                 //TODO: persist errMessage to ES
                 template.send(ERROR_TOPIC, errMessage);
