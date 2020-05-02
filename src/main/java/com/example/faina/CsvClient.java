@@ -15,7 +15,7 @@ import static com.example.faina.utils.InputUtils.getFileName;
 import static com.example.faina.utils.InputUtils.getReader;
 import static com.example.faina.utils.MessageUtils.sendMessage;
 
-@SpringBootApplication
+//@SpringBootApplication
 public class CsvClient implements CommandLineRunner {
 
 	private static Logger logger = LoggerFactory.getLogger(CsvClient.class);
