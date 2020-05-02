@@ -17,7 +17,7 @@ public class InputUtils {
     public static String getFileName(String[] args, String defaultFileName) {
         String fileName = defaultFileName;
         //override the file name with program argument
-        if (args != null && args.length > 0 && args[0] != null)	{
+        if (args != null && args.length > 0 && args[0] != null && args[0].startsWith("input="))	{
             fileName = args[0];
         }
         return fileName;
