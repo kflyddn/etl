@@ -45,8 +45,9 @@ public class IntegrationTest {
 
     @BeforeEach
     public void setUp() {
+        consumerRecords.clear();
         container.start();
-        ContainerTestUtils.waitForAssignment(container, kafkaBroker.getPartitionsPerTopic());
+        ContainerTestUtils.waitForAssignment(container, 8);
     }
 
     @After
@@ -56,33 +57,30 @@ public class IntegrationTest {
 
 
     @Test
-    public void csvFlowTest() throws Exception {
+    public void csvFlowTest() throws InterruptedException {
 
         assertTrue(consumerRecords.isEmpty());
-        String csvMessage = "id,header1, header2\n" +
-                "1,val1,val2\n" +
-                "2,val11,val22\n" +
-                "3,val111,val222";
+        String csvMessage = "id,header1, header2\n1,val1,val2";
+
         sendMessage(CSV_TOPIC, csvMessage, kafkaTemplate, logger);
+        Thread.sleep(10000);
         ConsumerRecord<String, String> received = consumerRecords.poll(10, TimeUnit.SECONDS);
         assertTrue(received != null);
+        //TODO: fix expected value
         String expected = "";
+        assertTrue(received.topic().equals(CSV_TOPIC));
         assertTrue(received.value().equals(expected));
     }
 
-       /* @Test
-    public void csvTestValid() {
-        String csvMessage = "header1,header2\nval1,val2";
-        sendMessage(CSV_TOPIC, csvMessage, template, logger);
-        //TODO: assert
-    }
-
     @Test
-    public void csvTestNotValid() {
-        String csvMessage = "header1\nval1,val2";
-        sendMessage(CSV_TOPIC, csvMessage, template, logger);
-        //TODO: assert
+    public void csvNotValidTest() throws InterruptedException {
+        assertTrue(consumerRecords.isEmpty());
+        String csvInvalid = "id,header1, header2\nval1,val2";
+        sendMessage(CSV_TOPIC, csvInvalid, kafkaTemplate, logger);
+        ConsumerRecord<String, String> received = consumerRecords.poll(10, TimeUnit.SECONDS);
+        assertTrue(received != null);
+        //assert that consumerRecords contains error message
+        assertTrue(received.topic().equals(ERROR_TOPIC));
     }
-*/
 
 }

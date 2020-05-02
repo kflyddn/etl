@@ -2,15 +2,13 @@ package com.example.faina.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.junit.ClassRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.listener.MessageListener;
@@ -53,19 +51,23 @@ public class TestConfig {
         return new LinkedBlockingQueue<>();
     }
 
-
-
     @Bean
     public KafkaMessageListenerContainer<String, String> embeddedContainer(@Autowired EmbeddedKafkaBroker kafkaBroker,
                                                                            @Autowired BlockingQueue<ConsumerRecord<String, String>> consumerRecords)    {
-        ContainerProperties containerProperties = new ContainerProperties(JSON_TOPIC);
+        ContainerProperties containerProperties = new ContainerProperties(topics);
 
-        Map<String, Object> consumerProperties = KafkaTestUtils.consumerProps(
-                groupId, "true", kafkaBroker);
-        consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+        Map<String, Object> props = KafkaTestUtils.consumerProps(
+                groupId, "false", kafkaBroker);
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 bootstrapAddress);
+        props.put(
+                ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+                StringDeserializer.class);
+        props.put(
+                ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+                StringDeserializer.class);
 
-        DefaultKafkaConsumerFactory<String, String> consumer = new DefaultKafkaConsumerFactory<>(consumerProperties);
+        DefaultKafkaConsumerFactory<String, String> consumer = new DefaultKafkaConsumerFactory<>(props);
 
         KafkaMessageListenerContainer<String, String> container =  new KafkaMessageListenerContainer<>(consumer, containerProperties);
 
