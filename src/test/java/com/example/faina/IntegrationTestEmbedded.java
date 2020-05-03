@@ -58,7 +58,7 @@ public class IntegrationTestEmbedded {
     }
 
 
-    @Test
+    /*@Test
     @Ignore //TODO: fix embedded kafka
     public void csvFlowTest() throws InterruptedException {
 
@@ -86,5 +86,5 @@ public class IntegrationTestEmbedded {
         //assert that consumerRecords contains error message
         assertTrue(received.topic().equals(ERROR_TOPIC));
     }
-
+*/
 }
