@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 })
 public class IntegrationTest {
 
-    private static final long WAIT  = 2000L;
+    private static final long WAIT  = 3000L;
 
     private static Logger logger = LoggerFactory.getLogger(IntegrationTest.class);
 

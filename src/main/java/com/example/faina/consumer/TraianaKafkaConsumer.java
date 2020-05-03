@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class TraianaKafkaConsumer {
     private KafkaTemplate kafkaTemplate;
 
     @KafkaListener(topics = XML_TOPIC)
-    public void listenXml(ConsumerRecord<?, ?> cr)  {
+    public void listenXml(ConsumerRecord<?, ?> cr, Acknowledgment ack)  {
         logger.info(String.format(logMessage, "xml", cr.value()));
 
         try {
@@ -37,12 +38,13 @@ public class TraianaKafkaConsumer {
         } catch (IOException e) {
             String errMessage = "this message is not valid xml: \n"+cr;
             kafkaTemplate.send(ERROR_TOPIC, errMessage);
+        }finally {
+            ack.acknowledge();
         }
-
     }
 
     @KafkaListener(topics = CSV_TOPIC)
-    public void listenCsv(ConsumerRecord<?, ?> cr) throws Exception {
+    public void listenCsv(ConsumerRecord<?, ?> cr, Acknowledgment ack) throws Exception {
        logger.info(String.format(logMessage, "csv", cr.value()));
         try {
             String jsonMessage = csvToJson(cr.value().toString()).toString();
@@ -50,19 +52,23 @@ public class TraianaKafkaConsumer {
         } catch(Exception e) {
             String errMessage = "this message is not valid csv: \n"+cr;
             kafkaTemplate.send(ERROR_TOPIC, errMessage);
+        }finally {
+            ack.acknowledge();
         }
     }
 
     @KafkaListener(topics = JSON_TOPIC)
-    public void listenJson(ConsumerRecord<?, ?> cr) {
+    public void listenJson(ConsumerRecord<?, ?> cr, Acknowledgment ack) {
         logger.info(String.format(logMessage, "json", cr.value()));
         //TODO: send json via REST
+        ack.acknowledge();
     }
 
     @KafkaListener(topics = ERROR_TOPIC)
-    public void listenError(ConsumerRecord<?, ?> cr) throws Exception {
+    public void listenError(ConsumerRecord<?, ?> cr, Acknowledgment ack) throws Exception {
         logger.error(String.format(logMessage, "error", cr.value()));
         //TODO: write to database
+        ack.acknowledge();
 
     }
 }
