@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+//TODO: create interface Transformer,
+// class XmlTransformer implements Transformer, class CsvTransformer implements Transformer
+//TODO: move the transformation to XmlTransformer.transform(), CsvTransformer.transform()
 public class TransformUtils {
 
     private static CsvSchema csv = CsvSchema.emptySchema().withHeader();
@@ -20,6 +23,8 @@ public class TransformUtils {
     private static XmlMapper xmlMapper = new XmlMapper();
     private static ObjectMapper jsonMapper = new ObjectMapper();
 
+
+    //TODO: make sure that all transformer methods return object of the same class
     public static JSONObject csvToJson(String csvString) throws IOException {
         MappingIterator<Map<?, ?>> mappingIterator =  csvMapper.reader().forType(Map.class).with(csv).readValues(csvString);
         List<Map<?,?>> res = mappingIterator.readAll();
@@ -31,6 +36,7 @@ public class TransformUtils {
 
     }
 
+    //TODO: make sure that all transformer methods return object of the same class
     private static JsonNode xmlToJson(ConsumerRecord<?, ?> cr) throws IOException {
 
         JsonNode node = xmlMapper.readTree(cr.value().toString().getBytes());
