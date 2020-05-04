@@ -31,9 +31,15 @@ public class InputUtils {
      */
     public static String getFileName(String[] args, String defaultFileName) {
         String fileName = defaultFileName;
+        String inputPrefix = "input=";
         //override the file name with program argument
-        if (args != null && args.length > 1 && args[1] != null && args[1].startsWith("input="))	{
-            fileName = args[0];
+        if (args != null)   {
+            for (String arg: args)  {
+                if (arg != null && arg.startsWith(inputPrefix))    {
+                    fileName = arg.split(inputPrefix)[1];
+                    break;
+                }
+            }
         }
         return fileName;
     }
