@@ -1,9 +1,9 @@
-package com.example.faina.client;
+package com.example.faina.client.impl;
 
+import com.example.faina.client.InputClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -17,7 +17,7 @@ import static com.example.faina.utils.MessageUtils.sendMessage;
 
 @SpringBootApplication
 @Profile("csv")
-public class CsvClient implements CommandLineRunner {
+public class CsvClient implements InputClient {
 
 	private static Logger logger = LoggerFactory.getLogger(CsvClient.class);
 

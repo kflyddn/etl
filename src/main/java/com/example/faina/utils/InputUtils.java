@@ -27,14 +27,26 @@ public class InputUtils {
      * finds out the input file name
      * @param args
      * @param defaultFileName
-     * @return input file name
+     * @return default input file name if not overridden by program params
      */
     public static String getFileName(String[] args, String defaultFileName) {
         String fileName = defaultFileName;
         //override the file name with program argument
-        if (args != null && args.length > 0 && args[0] != null && args[0].startsWith("input="))	{
+        if (args != null && args.length > 1 && args[1] != null && args[1].startsWith("input="))	{
             fileName = args[0];
         }
         return fileName;
+    }
+
+    /**
+     * gets path from resource/{input filename}
+     * @param args
+     * @param defaultFileName
+     * @param clasz
+     * @return
+     */
+    public static String getPath(String[] args, String defaultFileName, Class clasz) {
+        String fileName = getFileName(args, defaultFileName);
+        return clasz.getClassLoader().getResource(fileName).getPath();
     }
 }
