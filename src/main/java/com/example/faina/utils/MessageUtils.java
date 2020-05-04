@@ -33,6 +33,7 @@ public class MessageUtils {
             }
             @Override
             public void onFailure(Throwable ex) {
+                //TODO: fix error message to be a normalized JSON
                 String errMessage = "Callback onFailure: Unable to send message to "+topic+":\n"
                         + message + "\n due to : " + ex.getMessage();
                 logger.error(errMessage);
