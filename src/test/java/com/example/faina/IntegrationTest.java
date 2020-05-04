@@ -4,7 +4,7 @@ import com.example.faina.config.KafkaConsumerConfig;
 import com.example.faina.config.KafkaProducerConfig;
 import com.example.faina.config.KafkaTopicConfig;
 import com.example.faina.config.TestConfig;
-import com.example.faina.consumer.TraianaKafkaConsumer;
+import com.example.faina.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.After;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
         KafkaConsumerConfig.class,
         KafkaProducerConfig.class,
         KafkaTopicConfig.class,
-        TraianaKafkaConsumer.class
+        KafkaConsumer.class
 })
 public class IntegrationTest {
 

@@ -16,12 +16,12 @@ import static com.example.faina.utils.MessageUtils.sendMessage;
 import static com.example.faina.utils.TransformUtils.*;
 
 @Service
-public class TraianaKafkaConsumer {
+public class KafkaConsumer {
 
-    private static Logger logger = LoggerFactory.getLogger(TraianaKafkaConsumer.class);
+    private static Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
     private static final String logMessage = "%s listener received a message:\n%s";
 
-    public TraianaKafkaConsumer()  {
+    public KafkaConsumer()  {
         logger.info("creating KafkaConsumer");
     }
 

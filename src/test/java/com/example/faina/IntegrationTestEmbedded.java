@@ -1,12 +1,10 @@
 package com.example.faina;
 
 import com.example.faina.config.TestEmbeddedConfig;
-import com.example.faina.consumer.TraianaKafkaConsumer;
+import com.example.faina.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +18,11 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
 
-import static com.example.faina.config.KafkaTopicConfig.*;
-import static com.example.faina.utils.MessageUtils.sendMessage;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {TestEmbeddedConfig.class, TraianaKafkaConsumer.class})
+@SpringBootTest(classes = {TestEmbeddedConfig.class, KafkaConsumer.class})
 @DirtiesContext
 public class IntegrationTestEmbedded {
 
