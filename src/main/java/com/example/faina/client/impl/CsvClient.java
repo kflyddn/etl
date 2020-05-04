@@ -15,6 +15,10 @@ import static com.example.faina.utils.InputUtils.getFileName;
 import static com.example.faina.utils.InputUtils.getReader;
 import static com.example.faina.utils.MessageUtils.sendMessage;
 
+/**
+ * CSV client reads multiple messages from single .csv file
+ * the client sends messages one by one, each message comes with the original csv header
+ */
 @SpringBootApplication
 @Profile("csv")
 public class CsvClient implements InputClient {
