@@ -60,7 +60,6 @@ public class KafkaConsumer {
     @KafkaListener(topics = JSON_TOPIC)
     public void listenJson(ConsumerRecord<?, ?> cr, Acknowledgment ack) {
         logger.info(String.format(logMessage, "json", cr.value()));
-        //TODO: send json via REST
         ack.acknowledge();
     }
 
